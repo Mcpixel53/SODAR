@@ -1,3 +1,4 @@
+% Pasamos de los auxiliares latex en el directorio docs
 docs/*/*.aux
 docs/*/*.glo
 docs/*/*.idx
@@ -24,3 +25,6 @@ docs/*/*.nav
 docs/*/*.snm
 docs/*/*.vrb
 docs/*/*.synctex.gz
+
+# Pasamos del docs de salvari
+sandbox/salvari/doc
