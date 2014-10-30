@@ -43,12 +43,15 @@
 \definecolor{mauve}{rgb}{0.58,0,0.82}
 
 \usepackage{listings}
+
+% Empezamos fijando el estilo para el código Arduino
+
 \lstset{language=C++,
-  numberstyle=\tiny\color{gray},
-  keywordstyle=\color{blue},
-  commentstyle=\color{dkgreen},
-  stringstyle=\color{mauve},
-  basicstyle={\tiny\ttfamily}
+  basicstyle=\tiny\ttfamily,
+  keywordstyle=\color{blue}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  commentstyle=\color{green}\ttfamily,
+  morecomment=[l][\color{magenta}]{\#}
 }
 
 
