@@ -1,14 +1,19 @@
 %-------------------------------------------------------------------------------
-% Fichero:	
+% Fichero:	main.tex
 % Documento:	Presentación para el taller "SODAR: Iniciación a Arduino + Processing"
-% Autores:	
+% Este fichero almacena el cuerpo ppal de las transparencias.
+% NO SE PUEDE COMPILAR directamente hay que usar el main.beamer.tex o el main.article.tex            
+% Autores:	ctemes, eukelade, milo, salvari
 % Fecha:        
 % Descripción:	La presentación del taller
 % Versión:      0.00
 % Historial:    0.00 
 %-------------------------------------------------------------------------------
 
-\documentclass{beamer}
+% Quitamos el documentclass, lo vamos a poner a través de los ficheros
+% main.beamer.tex  --> para hacer la presentación
+% main.article.tex --> para hacer el artículo
+% \documentclass{beamer}
 
 \mode<presentation>
 {
@@ -16,6 +21,7 @@
   \usecolortheme[RGB={52,170,205}]{structure}
   \setbeamertemplate{navigation symbols}{}
 }
+\usepackage{graphicx}
 \DeclareGraphicsExtensions{.pdf,.png,.jpg} %solo para PDFLaTeX
 \graphicspath{{figures/}{graphics/}{images/}}
 
@@ -86,9 +92,9 @@ Asociación BricoLabs
 % is a graphic format that can be processed by latex or pdflatex,
 % resp., then you can add a logo as follows:
 
-\pgfdeclareimage[height=0.4cm]{oshwdem-logo}{OSHWIcolor.png}
+% \pgfdeclareimage[height=0.4cm]{oshwdem-logo}{oshwi.png}
 % \logo{\pgfuseimage{oshwdem-logo}}
-
+\logo{\includegraphics [width=0.2\textwidth]{oshwi.png}}
 
 
 
@@ -117,6 +123,9 @@ Asociación BricoLabs
 \begin{frame}{Agenda}
   \tableofcontents
   % You might wish to add the option [pausesections]
+  \note[item]{Recordar que el curso es de iniciación}
+  \note[item]{Va a ser un curso intenso, descanso cortito}
+  \note[item]{Comentar duración total del curso}
 \end{frame}
 
 
@@ -131,10 +140,17 @@ Asociación BricoLabs
   \begin{columns}
     \column{.6\textwidth}
     \includegraphics [width=0.8\textwidth]{bricolabs_logo.png}
-    \column{.4\textwidth}
-    \includegraphics [width=0.8\textwidth]{OSHWIcolor.png}
-  \end{columns}
 
+    \url{http://bricolabs.cc/}
+
+    \column{.4\textwidth}
+    \includegraphics [width=0.8\textwidth]{oshwi.png}
+
+    \url{http://oshwdem.org}
+  \end{columns}
+  \note[item]{BricoLabs: Asociación, Domus, Difusión del hardware y
+    software libre, Tecnófilos, Divulgación, wiki, }
+  \note[item]{OSHWDem evento barcamp}
 \end{frame}
 
 %----------------------------------------------------------------------
@@ -145,6 +161,8 @@ Asociación BricoLabs
   \item Milo
   \item @salvari
   \end{itemize}
+  \note[item]{Para cualquier duda podéis contactar con nosotros en
+    nuestros twitters}
 \end{frame}
 
 %----------------------------------------------------------------------
@@ -156,6 +174,7 @@ Asociación BricoLabs
     \pause
   \item ¿Traéis los deberes hechos? ;)
   \end{itemize}
+  \note[item]{No hay mucho más que añadir}
 \end{frame}
 
 %......................................................................
@@ -164,6 +183,11 @@ Asociación BricoLabs
 %----------------------------------------------------------------------
 \begin{frame}{Revisar la instalación}
   \includegraphics [width=0.8\textwidth]{open_blink.png}
+  \note[item]{Separamos a los que tienen hecha la instalación y los
+    que no, los primeros prueban el Blink y a los segundos los
+    ayudamos.}
+  \note[item]{Hora límite 17.00}
+  \note[item]{Blink: Fichero::Ejemplos::Básicos::Blink}
 \end{frame}
 
 %______________________________________________________________________
@@ -175,8 +199,11 @@ Asociación BricoLabs
 %----------------------------------------------------------------------
 \begin{frame}{SODAR}
 
-FOTO DEL MONTAJE
-  
+  \includegraphics [width=0.8\textwidth]{montaje.jpg}
+
+  \note[item]{SODAR, igual que RADAR SOnic Detection and Range}
+  \note[item]{Básicamente dos partes moviento y sensor}
+  \note[item]{Una tercera parte será la estación de usuario}
 \end{frame}
 
 %----------------------------------------------------------------------
@@ -192,6 +219,11 @@ FOTO DEL MONTAJE
     \column{.5\textwidth}
     \href{http://blog.arduino.cc/wp-content/uploads/2013/11/ArduinoEvolution_make.jpg}{Foto Familia}
   \end{columns}
+  \note[item]{Empezamos con el Arduino}
+  \note[item]{Año 2005}
+  \note[item]{Procesadores de la familia Atmel AVR (AtMega)}
+  \note[item]{IDE (basado en processing)}
+  \note[item]{CPP con librerias variadas}
 \end{frame}
 
 %......................................................................
@@ -205,6 +237,10 @@ FOTO DEL MONTAJE
 %----------------------------------------------------------------------
 \begin{frame}{Montaje II}
   Esquema Fritzing
+  \note[item]{¡Mucho ojo con los cables del servo!}
+  \note[item]{Rojo: 5 volt}
+  \note[item]{Marron: tierra}
+  \note[item]{Naranja: Señal}
 \end{frame}
 
 %......................................................................
@@ -236,6 +272,11 @@ void loop() {
 
 }
 \end{lstlisting}
+\note[item]{Tres partes}
+\note[item]{Primera parte imports y variables -- Tiempo de compilación}
+\note[item]{Tiempo de ejecución -- dos partes setup y loop}
+\note[item]{setup al arrancar, después de un reset hay un arranque}
+\note[item]{loop para siempre jamás (mentira)}
 \end{frame}
 
 %----------------------------------------------------------------------
@@ -243,17 +284,25 @@ void loop() {
   Foto del servo
 
   Fundido a Código de Invocación del servo
+
+  \note[item]{Que es un servo? Un motor y un pequeño circuito}
+  \note[item]{Protocolo de comunicación, anterior a la era digital}
+  \note[item]{PWM: 20ms de periodo para los servos}
+  \note[item]{Tipos de servos, los nuestros son de 180 grados, 1,6 kg}
   
 \end{frame}
 
 %----------------------------------------------------------------------
 \begin{frame}{Barridos}
   Foto de un radar (de verdad)
+
+  \note[item]{¿Como os imagináis que debe moverse el radar?}
 \end{frame}
 
 %----------------------------------------------------------------------
 \begin{frame}{Una solución}
-  Nuestra solución
+  Nuestra solución \note[item]{Vemos nuestra solución en el IDE
+    proyectado y comentamos}
 \end{frame}
 
 %......................................................................
@@ -264,13 +313,38 @@ void loop() {
   Foto sensor
 
   Fundido a Caracteristicas técnicas
+
+  \note[item]{Como funciona el sensor, tren de pulsos y mide el tiempo
+    en que tarda en recibir el eco}
 \end{frame}
 
 %----------------------------------------------------------------------
 \begin{frame}{Protocolo}
   Diagrama de señales
+
+  \note[item]{Explicamos el protocolo de señales del servo}
 \end{frame}
 
+% \definecolor{dkgreen}{rgb}{0,0.6,0}
+% \definecolor{gray}{rgb}{0.5,0.5,0.5}
+% \definecolor{mauve}{rgb}{0.58,0,0.82}
+% 
+% \lstset{frame=tb,
+%   language=Java,
+%   aboveskip=3mm,
+%   belowskip=3mm,
+%   showstringspaces=false,
+%   columns=flexible,
+%   basicstyle={\small\ttfamily},
+%   numbers=none,
+%   numberstyle=\tiny\color{gray},
+%   keywordstyle=\color{blue},
+%   commentstyle=\color{dkgreen},
+%   stringstyle=\color{mauve},
+%   breaklines=true,
+%   breakatwhitespace=true,    // added this
+%   tabsize=3
+% }
 
 \end{document}
 
