@@ -10,7 +10,7 @@
  
 #define ANGLE_MIN 0
 #define ANGLE_MAX 180
-#define ANGLE_STEP 1
+#define ANGLE_STEP 5
  
 int angle = 0;	// de ANGLE_MIN a ANGLE_MAX
  

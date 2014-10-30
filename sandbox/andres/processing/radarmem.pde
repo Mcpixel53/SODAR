@@ -25,7 +25,7 @@ Serial myPort;
 
 void setup() {   
     background(255);
-    size(200, 200); 
+    size(200, 200);
     if (Serial.list().length > 0) {     
        myPort = new Serial(this, Serial.list()[0] , 9600);
        myPort.bufferUntil('\n'); // Trigger a SerialEvent on new line
@@ -35,7 +35,7 @@ void setup() {
 void draw() { 
     pantalla();
     scanline();
-    obtenerDatos(); // solo pruebas! los datos los proporciona serialEvent
+    //obtenerDatos(); // solo pruebas! los datos los proporciona serialEvent
     pintarPuntos();
 }
 
@@ -65,33 +65,16 @@ void scanline() {
 }
     
 void serialEvent(Serial cPort) {  
-    comPortString = cPort.readString();  
+    comPortString = cPort.readString();
     if (comPortString != null) {    
         comPortString=trim(comPortString);    
         String[] values = split(comPortString, ',');    
         try {      
             a = Integer.parseInt(values[0]);      
-            d = Integer.parseInt(values[1]) / MAX_DISTANCE * MAXD;
+            d = int(Float.parseFloat(values[1]) / MAX_DISTANCE * MAXD);
         } catch (Exception e) {}  
   if (d>=0) guardarPunto();
     }
-}
-
-boolean hayDatos() {
-    boolean r=false;
-    if( millis() > time ) {
-        a+=s*PASO;
-        if (a>=MAXANG) {s=-1;}
-        if (a<=MINANG) {s=1;}        
-        d = int(random(MAXD));
-        time = millis() + 200;
-        r = (d>=0);
-    } 
-    return r;
-}
-
-void obtenerDatos() {
-    if (hayDatos()) guardarPunto();
 }
 
 void guardarPunto() {
@@ -100,11 +83,7 @@ void guardarPunto() {
         else 
             puntos = str(a) + "," + str(d);
         if (i >= MEMORIA) {
-          println("aqui");
-            println(puntos);
-            println(puntos.substring(0,lastindex(puntos,';')));
             puntos = puntos.substring(0,lastindex(puntos,';'));           
-            println(puntos);
         }
         else
             i++;    
