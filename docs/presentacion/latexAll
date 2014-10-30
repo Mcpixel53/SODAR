@@ -1,0 +1,4 @@
+#!/bin/bash
+pdflatex main.beamer.tex
+pdflatex main.notes.tex
+pdflatex main.article.tex

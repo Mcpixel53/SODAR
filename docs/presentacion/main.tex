@@ -199,11 +199,13 @@ Asociación BricoLabs
 %----------------------------------------------------------------------
 \begin{frame}{SODAR}
 
-  \includegraphics [width=0.8\textwidth]{montaje.jpg}
+  \only<1>{\includegraphics [width=0.8\textwidth]{montaje.jpg}}
+  \only<2>{\includegraphics [width=0.8\textwidth]{ArduinoUnoSmd.jpg}}
 
   \note[item]{SODAR, igual que RADAR SOnic Detection and Range}
   \note[item]{Básicamente dos partes moviento y sensor}
   \note[item]{Una tercera parte será la estación de usuario}
+  \note[item]{*****Corregir GRAFICOS*****}
 \end{frame}
 
 %----------------------------------------------------------------------
@@ -224,6 +226,8 @@ Asociación BricoLabs
   \note[item]{Procesadores de la familia Atmel AVR (AtMega)}
   \note[item]{IDE (basado en processing)}
   \note[item]{CPP con librerias variadas}
+  \note[item]{Familia Arduino}
+  \note[item]{Ecosistema asociado: shields, sensores, etc}
 \end{frame}
 
 %......................................................................
@@ -231,7 +235,11 @@ Asociación BricoLabs
 
 %----------------------------------------------------------------------
 \begin{frame}{Montaje I}
-  Foto del soporte
+  \includegraphics [width=0.8\textwidth]{montaje.jpg}
+  \note[item]{***** CORREGIR FOTO *****}
+  \note[item]{Tenemos que fijar el servo (cinta doble cara a la BB)}
+  \note[item]{Tenemos que fijar el sensor a la corona del servo}
+  \note[item]{Y por último montar la corona}
 \end{frame}
 
 %----------------------------------------------------------------------
@@ -248,6 +256,7 @@ Asociación BricoLabs
 
 %----------------------------------------------------------------------
 \begin{frame}[fragile]{Estructura de un programa Arduino}
+
 \begin{lstlisting}
 #include <Servo.h>     
 
@@ -272,6 +281,7 @@ void loop() {
 
 }
 \end{lstlisting}
+
 \note[item]{Tres partes}
 \note[item]{Primera parte imports y variables -- Tiempo de compilación}
 \note[item]{Tiempo de ejecución -- dos partes setup y loop}
@@ -280,29 +290,52 @@ void loop() {
 \end{frame}
 
 %----------------------------------------------------------------------
-\begin{frame}{Servo}
-  Foto del servo
+\begin{frame}[fragile]{Servo}
+\only<1>{\includegraphics [width=0.6\textwidth]{sg90servo.jpg}}
+\begin{onlyenv}<2>
+  \begin{lstlisting}
+#include <Servo.h>     
 
-  Fundido a Código de Invocación del servo
+#define SERVO_PWM_PIN 9
 
-  \note[item]{Que es un servo? Un motor y un pequeño circuito}
-  \note[item]{Protocolo de comunicación, anterior a la era digital}
-  \note[item]{PWM: 20ms de periodo para los servos}
-  \note[item]{Tipos de servos, los nuestros son de 180 grados, 1,6 kg}
+Servo myservo;
+
+myservo.attach(SERVO_PWM_PIN);
+
+myservo.write(angle);
+
+  \end{lstlisting}
+\end{onlyenv}
+
+  \note[item]<1>{Que es un servo? Un motor y un pequeño circuito}
+  \note[item]<1>{Protocolo de comunicación, anterior a la era digital}
+  \note[item]<1>{PWM: 20ms de periodo para los servos}
+  \note[item]<1>{Tipos de servos, los nuestros son de 180 grados, 1,6 kg}
+
+  \note[item]<2>{Importar Librería}
+  \note[item]<2>{Declarar objeto servo}
+  \note[item]<2>{Asociar PIN}
+  \note[item]<2>{Ordenar una posición}
   
 \end{frame}
 
 %----------------------------------------------------------------------
 \begin{frame}{Barridos}
-  Foto de un radar (de verdad)
+  \includegraphics [width=0.6\textwidth]{radar.jpg}
 
   \note[item]{¿Como os imagináis que debe moverse el radar?}
 \end{frame}
 
 %----------------------------------------------------------------------
 \begin{frame}{Una solución}
-  Nuestra solución \note[item]{Vemos nuestra solución en el IDE
-    proyectado y comentamos}
+  \begin{itemize}
+  \item Definimos un paso
+  \item Controlamos el ángulo
+  \item Usamos el propio loop del Arduino
+  \end{itemize}
+
+
+ \note[item]{Vemos nuestra solución en el IDE proyectado y comentamos}
 \end{frame}
 
 %......................................................................
@@ -310,9 +343,16 @@ void loop() {
 
 %----------------------------------------------------------------------
 \begin{frame}{Sensor ultrasonidos}
-  Foto sensor
+  \begin{onlyenv}<1>
+    \includegraphics [width=0.6\textwidth]{sr04.jpg}
 
-  Fundido a Caracteristicas técnicas
+    Sensor de distancia HC--SR04
+  \end{onlyenv}
+  \begin{onlyenv}<2>
+    \includegraphics [width=0.9\textwidth]{sr04_tech.png}
+  \end{onlyenv}
+
+  
 
   \note[item]{Como funciona el sensor, tren de pulsos y mide el tiempo
     en que tarda en recibir el eco}
@@ -320,6 +360,8 @@ void loop() {
 
 %----------------------------------------------------------------------
 \begin{frame}{Protocolo}
+  \includegraphics [width=0.9\textwidth]{protocol.png}
+
   Diagrama de señales
 
   \note[item]{Explicamos el protocolo de señales del servo}
