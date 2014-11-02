@@ -1,15 +1,29 @@
-#include <NewPing.h>
+/*----------------------------------------------------------------------
+  Fichero:	sodar.ino
+  Documento:	
+  Autores:	ctemes, eukelade, milo, salvari
+  Fecha:        
+  Descripción:	
+  Versión:      0.00
+  Historial:    0.00
+  ----------------------------------------------------------------------*/
+
+
+#include <NewPing.h>    // Importamos librerias        
 #include <Servo.h>
 
-#define ECHO_PIN 7        // pin del Arduino unido al pin ECHO del sensor (el pin ECHO devuelve el pulso de ultrasonidos emitido)
-#define TRIGGER_PIN 8     // pin del Arduino unido al pin TRIGGER del sensor (el pin TRIGGER es por donde se emite el pulso de ultrasonidos)
-#define SERVO_PWM_PIN 9   // pin del Arduino unido al pin PWM del servomotor (el pin PWM es el pin de control)
+#define ECHO_PIN 7      // pin del Arduino unido al pin ECHO del sensor
+                        // (el pin ECHO devuelve el pulso de ultrasonidos emitido)
+#define TRIGGER_PIN 8   // pin del Arduino unido al pin TRIGGER del sensor
+                        // (el pin TRIGGER es por donde se emite el pulso de ultrasonidos)
+#define SERVO_PWM_PIN 9 // pin del Arduino unido al pin PWM del servomotor
+                        // (el pin PWM es el pin de control)
 
-#define DISTANCIA_MAXIMA 100    // distancia máxima que queremos medir (en cm)
+#define DISTANCIA_MAXIMA 100 // distancia máxima que queremos medir (en cm)
  
-#define ANGULO_MIN 0      // angulo minimo del barrido (en grados)
-#define ANGULO_MAX 180    // angulo maximo del barrido (en grados)
-#define PASO_ANGULO 1     // paso de barrido (cantidad en que se incrementa el angulo de barrido)
+#define ANGULO_MIN 0    // angulo minimo del barrido (en grados)
+#define ANGULO_MAX 180  // angulo maximo del barrido (en grados)
+#define PASO_ANGULO 1   // paso de barrido (cantidad en que se incrementa el angulo de barrido)
 
 #define ATRAS -1
 #define ADELANTE 1
@@ -18,7 +32,10 @@ int angulo = 0;     // variable para guardar el angulo de barrido (de ANGULO_MIN
 int direccion = 1;  // dirección del movimiento del servo
 
 Servo miservo;      // objeto servo de la libreria Servo
-NewPing sonar(TRIGGER_PIN, ECHO_PIN, DISTANCIA_MAXIMA);   // objeto sensor de ultrasonidos de la libreria NewPing
+
+NewPing sonar(TRIGGER_PIN,
+              ECHO_PIN,
+              DISTANCIA_MAXIMA);   // objeto sensor de ultrasonidos de la libreria NewPing
  
 //------------------ FUNCION DE INICIALIZACION DEL ARDUINO ----------------
 // Esta función establece los valores iniciales para configurar el arduino
