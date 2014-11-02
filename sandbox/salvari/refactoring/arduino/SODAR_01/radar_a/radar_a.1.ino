@@ -11,7 +11,7 @@
 
 #define SERVO_PWM_PIN 9      // El servo lo conectamos al pin 9 del arduino (PWM)
 
-Servo myservo;                       // Declaramos una variable de tipo servo
+Servo miservo;                       // Declaramos una variable de tipo servo
 
 /*----------------------------------------------------------------------
   setup
@@ -21,7 +21,7 @@ Servo myservo;                       // Declaramos una variable de tipo servo
 void setup() {
   Serial.begin(9600);                // Abrimos el puerto serie (de momento para depurar)
 
-  myservo.attach(SERVO_PWM_PIN);     // Asociamos el objeto servo a un pin de control  
+  miservo.attach(SERVO_PWM_PIN);     // Asociamos el objeto servo a un pin de control  
 }
 
 

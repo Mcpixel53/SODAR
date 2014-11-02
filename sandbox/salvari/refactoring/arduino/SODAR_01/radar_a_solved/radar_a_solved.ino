@@ -11,18 +11,16 @@
 
 #include <Servo.h>
 
-#define SERVO_PWM_PIN 9      // El servo lo conectamos al pin 9 del arduino (PWM)
-#define ANGLE_SAFE 10        // El ángulo de seguridad será de 10 grados
-#define ANGLE_STEP 2         // El paso al inicio es de 2 grados
+#define SERVO_PWM_PIN 9    // El servo lo conectamos al pin 9 del arduino (PWM)
+#define ANG_PASO 2         // El paso al inicio es de 2 grados
+#define ANG_MIN 0
+#define ANG_MAX 180
 
 
-int min_angle = ANGLE_SAFE;          // Calculo el ángulo mínimo
-int max_angle = 180 - ANGLE_SAFE;    // Calculo el ángulo máximo
+int angulo    = ANG_MIN;   // Empezamos el barrido en el ángulo mínimo
+int dir       = 1;         // Empezamos aumentando el ángulo
 
-int angle     = min_angle;           // Empezamos el barrido en el ángulo mínimo
-int dir       = 1;                   // Empezamos aumentando el ángulo
-
-Servo myservo;                       // Declaramos una variable de tipo servo
+Servo miservo;             // Declaramos una variable de tipo servo
 
 /*----------------------------------------------------------------------
   setup
@@ -32,7 +30,7 @@ Servo myservo;                       // Declaramos una variable de tipo servo
 void setup() {
   Serial.begin(9600);                // Abrimos el puerto serie (de momento para depurar)
   
-  myservo.attach(SERVO_PWM_PIN);     // Asociamos el objeto servo a un pin de control
+  miservo.attach(SERVO_PWM_PIN);     // Asociamos el objeto servo a un pin de control
 }
 
 /*----------------------------------------------------------------------
@@ -41,10 +39,10 @@ void setup() {
  ----------------------------------------------------------------------*/
 void loop() {
   delay(50);                          // Esperamos para que el servo acabe su último movimiento 
-  myservo.write(angle);               // Pasamos el nuevo ángulo al servo
-  angle += dir * ANGLE_STEP;          // Calculo el siguiente ángulo
-  if (angle >= max_angle || angle <= min_angle) {  // Si el ángulo esta fuera de límites
-    dir = -dir;                                    //  cambio la dirección
+  miservo.write(angulo);              // Pasamos el nuevo ángulo al servo
+  angulo += dir * ANG_PASO;           // Calculo el siguiente ángulo
+  if (angulo >= ANG_MAX || angulo <= ANG_MIN) {  // Si el ángulo esta fuera de límites
+    dir = -dir;                                  //  cambio la dirección
   }
     
 }
