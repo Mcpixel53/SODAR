@@ -1,8 +1,12 @@
 #!/bin/bash
-pdflatex main.beamer.tex
-pdflatex main.beamer.tex
-pdflatex main.notes.tex
-pdflatex main.notes.tex
-pdflatex main.article.tex
-pdflatex main.article.tex
+pdflatex main_beamer.tex
+pdflatex main_beamer.tex
+pdflatex main_notes.tex
+pdflatex main_notes.tex
+pdflatex main_article.tex
+pdflatex main_article.tex
+pdflatex main_handout.tex
+pdflatex main_handout.tex
+pdflatex handout_entregable.tex
+pdflatex handout_entregable.tex
 rm *.aux *.log *.out *.toc *.nav *.snm *.vrb
