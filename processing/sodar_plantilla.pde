@@ -2,10 +2,10 @@ import processing.serial.*;
 
 /// ----- constantes -----------------------------------------------------------
 
-int MAXX=200;				// maxima ordenada de la pantalla			
-int MAXY=200;				// maxima abcisa de la pantalla
-int CENTROX=MAXX / 2;		// centro de coordenadas (x)
-int CENTROY=MAXY / 2;		// centro de coordenadas (y)
+int MAXX=200;           // maxima ordenada de la pantalla			
+int MAXY=200;           // maxima abcisa de la pantalla
+int CENTROX=MAXX / 2;   // centro de coordenadas (x)
+int CENTROY=MAXY / 2;   // centro de coordenadas (y)
 
 
 /// ----- variables ------------------------------------------------------------
@@ -22,22 +22,22 @@ Serial miPuerto;
 // Esta función establece los valores iniciales para configurar processing
 //-------------------------------------------------------------------------
 void setup() {   
-    background(255);
-    size(MAXX, MAXY); 
-    if (Serial.list().length > 0) {     
-       miPuerto = new Serial(this, Serial.list()[0] , 9600);
-       miPuerto.bufferUntil('\n'); 		// se genera un evento serie con cada nueva linea
-    }
-} 
+  background(255);
+  size(MAXX, MAXY); 
+  if (Serial.list().length > 0) {     
+    miPuerto = new Serial(this, Serial.list()[0] , 9600);
+    miPuerto.bufferUntil('\n');   // se genera un evento serie con cada nueva linea
+  }
+}
 
 
 //---------------------------- FUNCION DE DIBUJO --------------------------
 // Esta función realiza de forma continua la actividad programada 
 //-------------------------------------------------------------------------
 void draw() { 
-    pantalla();			// dibuja la pantalla del SODAR
-    lineaBarrido();		// dibuja la linea de barrido
-    pintarPuntos();		// dibuja los puntos en la pantalla
+  pantalla();       // dibuja la pantalla del SODAR
+  lineaBarrido();   // dibuja la linea de barrido
+  pintarPuntos();   // dibuja los puntos en la pantalla
 }
 
 
