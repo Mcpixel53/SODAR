@@ -1,10 +1,20 @@
+/*----------------------------------------------------------------------
+  Fichero:	sodar.pde
+  Documento:	
+  Autores:	ctemes, eukelade, milo, salvari
+  Fecha:        
+  Descripción:	
+  Versión:      0.00
+  Historial:    0.00
+  ----------------------------------------------------------------------*/
+
 import processing.serial.*;
 
 /// ----- constantes -----------------------------------------------------------
 
 int ANCHOCUADRICULA=15;       // ancho de la cuadricula
 int CFONDO= #B0C4DE;          // color de fondo
-int DISTANCIA_MAXIMA = 100;	  // distancia maxima que mide el sensor
+int DISTANCIA_MAXIMA = 100;   // distancia maxima que mide el sensor
 int MAXX=200;                 // maxima ordenada de la pantalla			
 int MAXY=200;                 // maxima abcisa de la pantalla
 int CENTROX=MAXX / 2;         // centro de coordenadas (x)
