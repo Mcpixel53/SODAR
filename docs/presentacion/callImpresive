@@ -1,0 +1,2 @@
+#!/bin/bash
+impressive.py --fake-fullscreen -g 1366x745 -d 1:30:00 main_beamer.pdf 

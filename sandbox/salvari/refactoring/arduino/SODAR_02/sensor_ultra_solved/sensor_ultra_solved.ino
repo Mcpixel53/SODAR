@@ -46,8 +46,8 @@ void loop() {
   
   
   
-  dist = time / 29 /2;                  // Calculamos la distancia y la imprimimos
-  
+  dist = time / 29 /2;                  // Calculamos la distancia
+                                        //  y la imprimimos
   Serial.println(dist);
   
   delay(60);
