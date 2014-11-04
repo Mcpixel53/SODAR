@@ -254,7 +254,7 @@ Asociación BricoLabs
 \end{frame}
 
 %......................................................................
-\subsection{Conceptos CPP}{El C de Arduino}
+\subsection{Conceptos CPP}
 
 %----------------------------------------------------------------------
 \begin{frame}[fragile]{Estructura de un programa Arduino}
@@ -332,7 +332,9 @@ Serial.println(10.1234, 2); // Imprime 10.12
 
 %----------------------------------------------------------------------
 \begin{frame}[fragile]{Servo}
-\only<1>{\includegraphics [width=0.6\textwidth]{sg90servo.jpg}}
+  \begin{onlyenv}<1>
+    \includegraphics [width=0.6\textwidth]{sg90servo.jpg}
+  \end{onlyenv}
 \begin{onlyenv}<2>
   \begin{lstlisting}
 #include <Servo.h>     
@@ -566,6 +568,26 @@ loop(){
 %......................................................................
 \subsection{Introducción}
 
+%----------------------------------------------------------------------
+\begin{frame}{Processing}
+  \begin{onlyenv}<1>
+  \includegraphics [width=0.9\textwidth]{processing_a.jpg}    
+  \end{onlyenv}
+  \begin{onlyenv}<2>
+  \includegraphics [width=0.9\textwidth]{processing_b.jpg}    
+  \end{onlyenv}
+  \begin{onlyenv}<3>
+  \includegraphics [width=0.9\textwidth]{processing_c.jpg}    
+  \end{onlyenv}
+\note[item]<1>{Qué es processing?}
+\note[item]<1>{Processing es java}
+\note[item]<1>{Educativo}
+\note[item]<1>{Interpretado no compilado}
+\note[item]<1>{Artístico}
+\note[item]<1>{Ben Fry and Casey Reas (MIT)}
+\end{frame}
+
+%----------------------------------------------------------------------
 \begin{frame}[fragile]{Estructura de un programa}
   \begin{lstlisting}
 import processing.serial.*;

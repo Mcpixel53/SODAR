@@ -18,9 +18,9 @@ int DISTANCIA_MAXIMA = 100;   // distancia maxima que mide el sensor
 int MAXX=800;                 // maxima ordenada de la pantalla			
 int MAXY=400;                 // maxima abcisa de la pantalla
 int CENTROX=MAXX / 2;         // centro de coordenadas (x)
-int CENTROY=MAXY2;         // centro de coordenadas (y)
+int CENTROY=MAXY;         // centro de coordenadas (y)
 int MAXD=75;                  // maxima distancia a representar en la pantalla
-int MEMORIA=5;                // numero de puntos a memorizar
+int MEMORIA=80;                // numero de puntos a memorizar
 int TAMP=15;                  // tamaño de punto
 int DECP=TAMP/MEMORIA;        // decremento de persistencia
 
@@ -59,7 +59,8 @@ void draw() {
 
 void pantalla() {
   background(CFONDO);   // pintar el fondo de color CFONDO
-  ellipse(CENTROX,CENTROY,MAXD+MAXD,MAXD+MAXD);   // dibujar un circulo
+  //ellipse(CENTROX,CENTROY,MAXD+MAXD,MAXD+MAXD);   // dibujar un circulo
+  ellipse(CENTROX,CENTROY,2*MAXY,2*MAXY);   // dibujar un circulo
   stroke(CFONDO);       // color de fondo
   for(int i=0; i<MAXX; i+=ANCHOCUADRICULA) {      // dibujar una cuadricula
       line(i,0,i,MAXY);
@@ -74,8 +75,8 @@ void pantalla() {
 
 void lineaBarrido() {
   float angulo_rad= TWO_PI - radians(angulo);   // obtener angulo en radianes
-  float x = MAXD*cos(angulo_rad);               // obtener coordenadas
-  float y = MAXD*sin(angulo_rad);
+  float x = MAXY*cos(angulo_rad);               // obtener coordenadas
+  float y = MAXY*sin(angulo_rad);
   line(CENTROX,CENTROY,CENTROX+x,CENTROY+y);    // dibujar una linea de barrido
 }
 
@@ -136,7 +137,7 @@ void serialEvent(Serial puerto) {
     String[] valores = split(contenidoSerie, ',');    // y calculamos  
     try {      
       angulo = Integer.parseInt(valores[0]);    // el angulo
-      distancia = int(Float.parseFloat(valores[1]) / DISTANCIA_MAXIMA * MAXD);    // y la distancia
+      distancia = int(Float.parseFloat(valores[1]) / DISTANCIA_MAXIMA * MAXY);    // y la distancia
     } catch (Exception e) {}  
   if (distancia>=0) guardarPunto();   // si la distancia es un valor real, guardamos el punto
   }
