@@ -12,15 +12,14 @@ import processing.serial.*;
 
 /// ----- constantes -----------------------------------------------------------
 
-int ANCHOCUADRICULA=15;       // ancho de la cuadricula
 int CFONDO= 0;                // color de fondo
 int DISTANCIA_MAXIMA = 100;   // distancia maxima que mide el sensor
 int MAXX=1000;                // maxima ordenada de la pantalla			
 int MAXY=500;                 // maxima abcisa de la pantalla
 int CENTROX=MAXX / 2;         // centro de coordenadas (x)
 int CENTROY=MAXY;             // centro de coordenadas (y)
-int MAXD=500;                 // maxima distancia a representar en la pantalla
-int MEMORIA=20;               // numero de puntos a memorizar
+int MAXD=MAXY;                // maxima distancia a representar en la pantalla
+int MEMORIA=30;               // numero de puntos a memorizar
 int TAMP=30;                  // tamaño de punto
 int DECP=TAMP/MEMORIA;        // decremento de persistencia
 
@@ -56,7 +55,6 @@ void draw() {
 
 
 // Esta funcion dibuja la pantalla del SODAR
-// debe ser una circunferencia con una cuadricula de puntos
 
 void pantalla() {
   background(CFONDO);
@@ -70,9 +68,8 @@ void pantalla() {
 
   // Dibuja una división cada 20 grados
   for (int i = 0; i <= 180/20; i++) {
-    float angle = -90 + i * 20;
-    float radAngle = radians(angle);
-    line(CENTROX, CENTROY, CENTROX + MAXD*sin(radAngle), CENTROY - MAXD*cos(radAngle));
+    float angulo_rad = radians(-90 + i * 20);
+    line(CENTROX, CENTROY, CENTROX + MAXD*sin(angulo_rad), CENTROY - MAXD*cos(angulo_rad));
   }
 }
 
@@ -135,7 +132,7 @@ void guardarPunto() {
 int lastindex(String s, char c) {
   int i= s.length()-1;                        // i es la posicion del final de la cadena
   while ((s.charAt(i) != c) && (i>=0)) i--;   // mientras el caracter en la posicion i no sea el buscado y no lleguemos al principio, ir hacia atras por la cadena
-  return i;   // devolver la posicion del caracter encontrado o una posicion inexistente
+  return i;                                   // devolver la posicion del caracter encontrado o una posicion inexistente
 }
 
 
@@ -150,7 +147,7 @@ void serialEvent(Serial puerto) {
       angulo = Integer.parseInt(valores[0]);        // el angulo
       distancia = int(Float.parseFloat(valores[1]) / DISTANCIA_MAXIMA * MAXD);  // y la distancia
     } catch (Exception e) {}  
-  if (distancia>=0) guardarPunto();   // si la distancia es un valor real, guardamos el punto
+  if (distancia>=0) guardarPunto();                 // si la distancia es un valor real, guardamos el punto
   }
 }
 
