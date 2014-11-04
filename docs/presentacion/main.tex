@@ -564,15 +564,57 @@ loop(){
 \section{Processing}
 
 %......................................................................
+\subsection{Introducción}
+
+\begin{frame}[fragile]{Estructura de un programa}
+  \begin{lstlisting}
+import processing.serial.*;
+
+/// ----- variables ------------------------------------------------------------
+
+int numPuntos=0;
+String contenidoSerie;
+Serial miPuerto;
+
+/*----------------------------------------------------------------------
+  setup
+  Se ejecuta una sola vez al principio del programa
+  ----------------------------------------------------------------------*/
+void setup() {   
+  background(255);
+  size(MAXX, MAXY); 
+}
+
+/*----------------------------------------------------------------------
+  draw
+  Se ejecuta eternamente hasta el fin de los tiempos
+  ----------------------------------------------------------------------*/
+void draw() { 
+
+}
+  \end{lstlisting}
+\end{frame}
+
+%......................................................................
 \subsection{Geometría}
 
 %----------------------------------------------------------------------
-\begin{frame}{Pantalla de Processing}
-  Geometria de pantalla
+\begin{frame}{Pantalla de Processing}{Coordenadas}
+  \includegraphics [width=0.6\textwidth]{xyProcessing.png}
+
+  Coordenadas en Processing
 \end{frame}
 
-\begin{frame}{Traducción del ángulo}
-  Un poco de LaTeX
+%----------------------------------------------------------------------
+\begin{frame}{Pantalla de Processing}{Ángulos}
+  \begin{columns}
+    \column{0.6\textwidth}
+    \includegraphics [width=0.9\textwidth]{arcProcessing.png}
+    \column{0.4\textwidth}
+    \begin{equation*}
+      \beta = 2\pi - radians(\alpha)
+    \end{equation*}
+  \end{columns}
 \end{frame}
 
 

@@ -15,10 +15,10 @@ import processing.serial.*;
 int ANCHOCUADRICULA=15;       // ancho de la cuadricula
 int CFONDO= #B0C4DE;          // color de fondo
 int DISTANCIA_MAXIMA = 100;   // distancia maxima que mide el sensor
-int MAXX=200;                 // maxima ordenada de la pantalla			
-int MAXY=200;                 // maxima abcisa de la pantalla
+int MAXX=800;                 // maxima ordenada de la pantalla			
+int MAXY=400;                 // maxima abcisa de la pantalla
 int CENTROX=MAXX / 2;         // centro de coordenadas (x)
-int CENTROY=MAXY / 2;         // centro de coordenadas (y)
+int CENTROY=MAXY2;         // centro de coordenadas (y)
 int MAXD=75;                  // maxima distancia a representar en la pantalla
 int MEMORIA=5;                // numero de puntos a memorizar
 int TAMP=15;                  // tamaño de punto
