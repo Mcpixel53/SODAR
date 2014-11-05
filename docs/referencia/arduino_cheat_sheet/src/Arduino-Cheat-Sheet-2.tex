@@ -193,7 +193,7 @@
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\headerbox{Control de flujo}{name=control_stuctures,column=0,below=structure}{
+\headerbox{Control de flujo}{name=control-stuctures,column=0,below=structure}{
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \begin{tabular}{l}
     \texttt{\textbf{if}(x<5)\{\}}  \\
@@ -203,7 +203,7 @@
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\headerbox{Sintaxis adicional}{name=further_syntax,column=0,below=control_stuctures}{
+\headerbox{Sintaxis adicional}{name=further-syntax,column=0,below=control-stuctures}{
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \begin{tabular}{l l}
     \textbf{$//$} &  comentario de linea \\
@@ -217,7 +217,7 @@
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\headerbox{Operadores}{name=general_operators,column=0,below=further_syntax}{
+\headerbox{Operadores}{name=general-operators,column=0,below=further-syntax}{
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \begin{tabular}{l l}
     \textbf{$=$} &  asignación \\
@@ -230,11 +230,13 @@
     \textbf{$<=$} &  menor o igual que \\
     \textbf{$>$} & mayor que \\
     \textbf{$>=$} &  mayor o igual que \\
+    \textbf{$++$} &  incremento\\
+    \textbf{$--$} & decremento \\
   \end{tabular}
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\headerbox{Operadores de bit}{name=bitwise,column=0,below=pointers}{
+\headerbox{Operadores de bit}{name=bitwise,column=0,below=general-operators}{
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \begin{tabular}{l l}
     \textbf{$\&$} &  bitwise AND \\
@@ -245,16 +247,14 @@
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\headerbox{Operadores compuestos}{name=compound,column=0,below=bitwise}{
+\headerbox{Operadores con asignación}{name=compound,column=0,below=bitwise}{
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \begin{tabular}{l l}
-    \textbf{$++$} &  Increment\\
-    \textbf{$--$} & Decrement \\
-    suma, resta, multiplicacion, division, modulo \\
-    y operadores de bit pueden ser compuestos \\
-    \textbf{$+=$},\textbf{$-=$},\textbf{$*=$},\textbf{$/=$} \\
-    \textbf{$\&=$},\textbf{$|=$},\textbf{$^=$},\textbf{$~=$} \\
-    \textbf{$\%=$} \\
+    \textbf{$\%=$} & módulo \\
+    \textbf{$+=,$ \hspace{2pt} $ -=$} & suma, resta \\
+    \textbf{$*=,$ \hspace{2pt} $ /=$} &  multiplicación, division \\
+    \textbf{$\&=,$ \hspace{2pt} $ |=$} &  bitwise AND, OR \\
+    \textbf{$\wedge=,$ \hspace{2pt} $ \sim=$} & bitwise XOR, NOT \\
   \end{tabular}
   %% OTHER COLUMS FOLLOW THIS COLUMN (bottom alignment)!!
   \vspace{9pt}
@@ -277,7 +277,7 @@
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\headerbox{Tipos de datos}{name=data_types,column=1,below=constants}{
+\headerbox{Tipos de datos}{name=datatypes,column=1,below=constants}{
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \begin{tabular}{l l}
     \textbf{void} & \\
@@ -293,7 +293,7 @@
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\headerbox{Arrays}{name=arrays,column=1,below=data_types}{
+\headerbox{Arrays}{name=arrays,column=1,below=datatypes}{
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \begin{tabular}{l}
     int myInts[6];  \\
@@ -350,7 +350,7 @@
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\headerbox{E/S Avanzada}{name=advanced_io,column=2,below=interrupts}{
+\headerbox{E/S Avanzada}{name=advancedio,column=2,below=interrupts}{
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \begin{tabular}{l}
     \textbf{tone}(pin, freqhz)  \\
@@ -362,7 +362,7 @@
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\headerbox{Tiempo}{name=time,column=2,below=advanced_io}{
+\headerbox{Tiempo}{name=time,column=2,below=advancedio}{
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \begin{tabular}{l l}
     unsigned long \textbf{millis()} &  50 days overflow\\
@@ -398,7 +398,7 @@
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\headerbox{Pines E/S}{name=pins,column=3}{
+\headerbox{Pines E/S}{name=pins,column=2,below=random}{
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{center}
   \begin{tabular}{l l l}
@@ -420,12 +420,12 @@
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\headerbox{E/S Analógica}{name=analog,column=3,below=pins}{
+\headerbox{E/S Analógica}{name=analog,column=3}{
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \begin{tabular}{l}
     \texttt{\textbf{analogReference}(\texttt{EXTERNAL, INTERNAL})}  \\
     \texttt{int \textbf{analogRead}(pin)}  \\
-    \texttt{\textbf{analogWrite}(pin,valor)} & PWM \\
+    \texttt{\textbf{analogWrite}(pin,valor)} -- PWM \\
   \end{tabular}
 }
 
@@ -463,7 +463,7 @@
 \headerbox{Arduino Uno}{name=board,column=3,below=websites,bottomaligned=compound}{
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \begin{center}
-    \includegraphics[width=0.95\textwidth]{./images/ARDUINO_UNO_PATAS.png}
+    \includegraphics[width=\textwidth,angle=90]{./images/ARDUINO_UNO_PATAS.png}
   \end{center}
 }
 
