@@ -239,10 +239,10 @@
 \headerbox{Operadores de bit}{name=bitwise,column=0,below=general-operators}{
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \begin{tabular}{l l}
-    \textbf{$\&$} &  bitwise AND \\
-    \textbf{$|$} & bitwise OR \\
-    \textbf{$\wedge$} & bitwise XOR \\
-    \textbf{$\sim$} & bitwise NOT\\
+    \textbf{$\&$} &  AND \\
+    \textbf{$|$} & OR \\
+    \textbf{$\wedge$} & XOR \\
+    \textbf{$\sim$} & NOT\\
   \end{tabular}
 }
 
@@ -253,8 +253,8 @@
     \textbf{$\%=$} & módulo \\
     \textbf{$+=,$ \hspace{2pt} $ -=$} & suma, resta \\
     \textbf{$*=,$ \hspace{2pt} $ /=$} &  multiplicación, division \\
-    \textbf{$\&=,$ \hspace{2pt} $ |=$} &  bitwise AND, OR \\
-    \textbf{$\wedge=,$ \hspace{2pt} $ \sim=$} & bitwise XOR, NOT \\
+    \textbf{$\&=,$ \hspace{2pt} $ |=$} &  AND, OR \\
+    \textbf{$\wedge=,$ \hspace{2pt} $ \sim=$} & XOR, NOT \\
   \end{tabular}
   %% OTHER COLUMS FOLLOW THIS COLUMN (bottom alignment)!!
   \vspace{9pt}
@@ -328,10 +328,10 @@
 \headerbox{Calificadores}{name=qualifiers,column=1,below=conversion,bottomaligned=compound}{
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \begin{tabular}{l l}
-    \textbf{static} &  Persist between calls\\
-    \textbf{volatile} & Use RAM (nice for ISR) \\
-    \textbf{const} & Mark read-only \\
-    \textbf{PROGMEM} & Use flash memory\\
+    \textbf{static} &  Persiste entre llamadas \\
+    \textbf{volatile} & Usa RAM (interesante para ISR) \\
+    \textbf{const} &  Sólo lectura \\
+    \textbf{PROGMEM} & Usa meoria flash \\
   \end{tabular}
 }
 
@@ -341,8 +341,8 @@
 \headerbox{Interrupciones}{name=interrupts,column=2}{
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \begin{tabular}{l}
-    \textbf{attachInterrupt}(interrupt, function, type)  \\
-    \textbf{detachInterrupt}(interrupt)  \\
+    \textbf{attachInterrupt}(interrupcion, funcion, tipo)  \\
+    \textbf{detachInterrupt}(interrupcion)  \\
     \textbf{boolean}(interrupt)  \\
     \textbf{interrupts}()  \\
     \textbf{noInterrupts}()  \\
@@ -354,9 +354,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \begin{tabular}{l}
     \textbf{tone}(pin, freqhz)  \\
-    \textbf{tone}(pin, freqhz, duration\_ms)  \\
+    \textbf{tone}(pin, freqhz, duracion\_ms)  \\
     \textbf{noTone}(pin)  \\
-    \textbf{shiftOut} (dataPin, clockPin, how, value)  \\
+    \textbf{shiftOut} (pinDatos, pinReloj, how, valor)  \\
     unsigned long \textbf{pulseIn}(pin, [HIGH,LOW])  \\
   \end{tabular}
 }
@@ -365,7 +365,7 @@
 \headerbox{Tiempo}{name=time,column=2,below=advancedio}{
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \begin{tabular}{l l}
-    unsigned long \textbf{millis()} &  50 days overflow\\
+    unsigned long \textbf{millis()} &  50 dias overflow\\
     unsigned long \textbf{micros()}  & 70 min overflow \\
     \textbf{delay}(ms) &  \\
     \textbf{delayMicroseconds}(us) & \\
@@ -381,9 +381,9 @@
   \end{tabular}
 
   \begin{tabular}{l}
-    \textbf{pow}(base, exponent)  \\
-    \textbf{map}(val, fromL, fromH, toL, toH) \\
-    \textbf{constrain}(val, fromL, toH) \\
+    \textbf{pow}(base, exponente)  \\
+    \textbf{map}(valor, deL, deH, aL, aH) \\
+    \textbf{constrain}(valor, deL, aH) \\
   \end{tabular}
 }
 
@@ -391,7 +391,7 @@
 \headerbox{Números Pseudo Aleatorios}{name=random,column=2,below=math}{
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \begin{tabular}{l}
-    \textbf{randomSeed}(seed)  \\
+    \textbf{randomSeed}(semilla)  \\
     long \textbf{random}(max)  \\
     long \textbf{random}(min, max)  \\
   \end{tabular}
@@ -425,7 +425,7 @@
   \begin{tabular}{l}
     \texttt{\textbf{analogReference}(\texttt{EXTERNAL, INTERNAL})}  \\
     \texttt{int \textbf{analogRead}(pin)}  \\
-    \texttt{\textbf{analogWrite}(pin,valor)} -- PWM \\
+    \texttt{\textbf{analogWrite}(pin,valor)} $\rightarrow$ PWM \\
   \end{tabular}
 }
 
@@ -434,7 +434,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \begin{tabular}{l}
     \texttt{\textbf{pinMode}(pin,[\texttt{INPUT,OUTPUT}])}  \\
-    \texttt{\textbf{digitalWrite}(pin, value)}  \\
+    \texttt{\textbf{digitalWrite}(pin, valor)}  \\
     \texttt{int \textbf{digitalRead}(pin)}  \\
   \end{tabular}
 }
@@ -443,7 +443,7 @@
 \headerbox{Comunicación Serie}{name=serial,column=3,below=digital}{
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \begin{tabular}{l}
-    \textbf{Serial.begin}(speed)  \\
+    \textbf{Serial.begin}(velocidad)  \\
     \textbf{Serial.print}(``Text'')  \\
     \textbf{Serial.println}(``Text'')  \\
   \end{tabular}
