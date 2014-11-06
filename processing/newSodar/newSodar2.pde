@@ -31,11 +31,11 @@ int DISTANCIA	     = 0;	     // posicion de la distancia en el array historia
 /// ----- variables ------------------------------------------------------------
 Serial miPuerto;
 
-int distancia = -1;
-int angulo    = 0;
+float distancia = -1;
+float angulo    = 0;
 
 // array bidimensinal para almacenar los puntos (se almacenan tantos como indique la constante MEMORIA)
-int[][] historia;   // {{ang0, dist0}, {ang1, dist1}, {ang2, dist2}, .... {angn, distn}}
+float[][] historia;   // {{ang0, dist0}, {ang1, dist1}, {ang2, dist2}, .... {angn, distn}}
 int numPuntos = 0;  // indica el número de puntos almacenados en memoria (en el array historia)
 
 /*----------------------------------------------------------------------
@@ -49,7 +49,7 @@ void setup() {
     miPuerto.bufferUntil('\n');    // se genera un evento serie con cada nueva linea
   }
 
-  historia = new int[MEMORIA][2];
+  historia = new float[MEMORIA][2];
   for (int i=0; i < MEMORIA; i++){    // Preparamos el array de historia, lleno de ceros
     for (int j=0; j < 2; j++){
       historia[i][j] = 0;
@@ -83,8 +83,7 @@ void pantalla() {
 
   // Dibujamos lineas cada 20 grados
   for (int ang = 0; ang <= 180; ang = ang + 20) {
-    float angulo_rad = TWO_PI - radians(ang);
-    line(CENTROX, CENTROY, CENTROX + MAXY * cos(angulo_rad), CENTROY +  MAXY * sin(angulo_rad));
+    line(CENTROX, CENTROY, CENTROX + MAXY * cos(angulo), CENTROY +  MAXY * sin(angulo));
   }
 }
 
@@ -95,9 +94,8 @@ void pantalla() {
   ----------------------------------------------------------------------*/
 void lineaBarrido() {
   stroke(PBORDE);
-  float angulo_rad = TWO_PI - radians(angulo);  // obtener angulo en radianes
-  float x = MAXY * cos(angulo_rad);             // obtener coordenadas
-  float y = MAXY * sin(angulo_rad);
+  float x = MAXY * cos(angulo);             // obtener coordenadas
+  float y = MAXY * sin(angulo);
   line(CENTROX,CENTROY,CENTROX+x,CENTROY+y);    // dibujar una linea de barrido
 }
 
@@ -107,19 +105,18 @@ void lineaBarrido() {
   pinta tantos puntos como guarde en MEMORIA
  ----------------------------------------------------------------------*/
 void pintarPuntos() {
-  for (int i=0; i < numPuntos; i++) {        // para cada punto
-    punto(historia[i][ANGULO],historia[i][DISTANCIA],DECP*(numPuntos-i));    // pintar el punto
+  for (int i=MEMORIA-numPuntos; i < MEMORIA; i++) {        // para cada punto
+    punto(historia[i][ANGULO],historia[i][DISTANCIA],DECP*(i-MEMORIA-numPuntos));    // pintar el punto
   }
 }
 
 /*----------------------------------------------------------------------
   funcion para pintar un punto en la pantalla del SODAR
   ----------------------------------------------------------------------*/
-void punto(int angulopunto, int distanciapunto, int decpunto) {
+void punto(float angulopunto, float distanciapunto, int decpunto) {
   fill(PFONDO);
-  float angulo_rad = TWO_PI - radians(angulopunto);   // obtener angulo en radianes
-  float x = distanciapunto * cos(angulo_rad);         // obtener coordenadas
-  float y = distanciapunto * sin(angulo_rad);
+  float x = distanciapunto * cos(angulopunto);         // obtener coordenadas
+  float y = distanciapunto * sin(angulopunto);
   ellipse((CENTROX + x), (CENTROY + y), (TAMP - decpunto), (TAMP - decpunto));   // pintar punto como un circulo
 }
 
@@ -139,17 +136,16 @@ void serialEvent(Serial puerto) {
                                                     // pero son strings..
 
     if (valores.length == 2) {
-      angulo = int(valores[0]);                     // el angulo a entero
+      angulo = TWO_PI - radians(float(valores[0])); // obtener angulo en radianes
       
-      distancia = int(                              // de string a entero
-                      map(float(valores[1]),        // valor a mapear
+      distancia = map(float(valores[1]),            // valor a mapear
                           0, DISTANCIA_MAXIMA,      // rango origen
-                          0 , MAXY)                 // rango destino
-                     );
+                          0 , MAXY);                // rango destino
     } else return;
+
     if (distancia >= 0){                            // si la distancia es significativa, guardamos el punto
-      historia[numPuntos][ANGULO]=angulo;
-      historia[numPuntos][DISTANCIA]=distancia;
+      historia[MEMORIA-numPuntos-1][ANGULO]=angulo;
+      historia[MEMORIA-numPuntos-1][DISTANCIA]=distancia;
       numPuntos = (numPuntos + 1) % MEMORIA;                 
     }
   }
