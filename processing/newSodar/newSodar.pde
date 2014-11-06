@@ -47,8 +47,9 @@ void setup() {
     miPuerto.bufferUntil('\n');    // se genera un evento serie con cada nueva linea
   }
 
-  for (i=0; i < LONGHIST, i++){    // Preparamos el array de historia, lleno de ceros
-    for (j=0; j <= 1, j++){
+  historia = new float[LONGHIST][2];
+  for (int i=0; i < LONGHIST; i++){    // Preparamos el array de historia, lleno de ceros
+    for (int j=0; j <= 1; j++){
       historia[i][j] = 0;
     }
   }
@@ -61,7 +62,7 @@ void setup() {
 void draw() {
   pantalla();       // dibuja la pantalla del SODAR
   lineaBarrido();   // dibuja la linea de barrido
-  pintarPuntos();   // dibuja los puntos en la pantalla
+//  pintarPuntos();   // dibuja los puntos en la pantalla
 }
 
 /*----------------------------------------------------------------------
