@@ -1,4 +1,4 @@
-ALL: Arduino-Cheat-Sheet.pdf
+ALL: Arduino-Cheat-Sheet.pdf Arduino-Cheat-Sheet-2.pdf 
 
 %.pdf: %.tex Makefile
 	pdflatex $< &&	pdflatex $< && pdflatex $<
