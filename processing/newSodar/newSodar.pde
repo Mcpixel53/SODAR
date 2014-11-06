@@ -30,11 +30,10 @@ Serial miPuerto;
 int distancia = -1;
 int angulo    = 0;
 
-String puntos = "";
-int numPuntos = 0;
+int numPuntos = 0;    // indica el número de puntos almacenados en memoria (en el array historia)
 
-float[][] historia;    // {{ang0, dist0}, {ang1, dist1}, {ang2, dist2}, .... {angn, distn}}
-int LONGHIST = 30;
+// array bidimensinal para almacenar los puntos (se almacenan tantos como indique la constante MEMORIA)
+int[][] historia;    // {{ang0, dist0}, {ang1, dist1}, {ang2, dist2}, .... {angn, distn}}
 
 /*----------------------------------------------------------------------
   setup
@@ -47,9 +46,9 @@ void setup() {
     miPuerto.bufferUntil('\n');    // se genera un evento serie con cada nueva linea
   }
 
-  historia = new float[LONGHIST][2];
-  for (int i=0; i < LONGHIST; i++){    // Preparamos el array de historia, lleno de ceros
-    for (int j=0; j <= 1; j++){
+  historia = new int[MEMORIA][2];
+  for (int i=0; i < MEMORIA; i++){    // Preparamos el array de historia, lleno de ceros
+    for (int j=0; j < 2; j++){
       historia[i][j] = 0;
     }
   }
@@ -62,7 +61,8 @@ void setup() {
 void draw() {
   pantalla();       // dibuja la pantalla del SODAR
   lineaBarrido();   // dibuja la linea de barrido
-//  pintarPuntos();   // dibuja los puntos en la pantalla
+  fakeSerialEvent();
+  pintarPuntos();   // dibuja los puntos en la pantalla
 }
 
 /*----------------------------------------------------------------------
@@ -106,10 +106,8 @@ void lineaBarrido() {
   pinta tantos puntos como guarde en MEMORIA
  ----------------------------------------------------------------------*/
 void pintarPuntos() {
-  String[] p = split(puntos,";");         // obtener todos los puntos en memoria
-  for (int f=0; f<p.length; f++) {        // para cada punto
-    String[] v = split(p[f], ",");        // obtener angulo y distancia
-    punto(int(v[0]),int(v[1]),DECP*f);    // pintar el punto
+  for (int i=0; i < numPuntos; i++) {        // para cada punto
+    punto(int(historia[i][0]),int(historia[i][1]),DECP*i);    // pintar el punto
   }
 }
 
@@ -125,34 +123,6 @@ void punto(int angulopunto, int distanciapunto, int decpunto) {
   ellipse((CENTROX + x), (CENTROY + y), (TAMP - decpunto), (TAMP - decpunto));   // pintar punto como un circulo
 }
 
-/*----------------------------------------------------------------------
-  guardaPunto
-  funcion para guardar los puntos en memoria
-  guarda tantos puntos como indique la constante MEMORIA
-  ----------------------------------------------------------------------*/
-void guardarPunto() {
-  if (puntos.length() > 0){                                       // si ya hay puntos en memoria
-    puntos = str(angulo) + "," + str(distancia) + ";" + puntos;   //  añadirlo al principio
-  } else {                                                        // si no hay puntos en memoria
-    puntos = str(angulo) + "," + str(distancia);                  //  guardarlo
-  }
-  
-  if (numPuntos >= MEMORIA){                                      // si ya se ha llenado la memoria
-    puntos = puntos.substring(0,lastindex(puntos,';'));           //  descartar puntos sobrantes
-  } else {                                                        // si aun no esta llena
-      numPuntos++;                                                //  incrementar el contador de puntos en memoria
-  }
-}
-
-// funcion que obtiene la posicion en una cadena del ultimo caracter indicado
-// ej: ultima posicion del caracter + en la cadena "1+3+4" seria 3
-// (porque las cadenas empiezan en la posicion 0)
-
-int lastindex(String s, char c) {
-  int i= s.length()-1;                        // i es la posicion del final de la cadena
-  while ((s.charAt(i) != c) && (i>=0)) i--;   // mientras el caracter en la posicion i no sea el buscado y no lleguemos al principio, ir hacia atras por la cadena
-  return i;                                   // devolver la posicion del caracter encontrado o una posicion inexistente
-}
 
 /*----------------------------------------------------------------------
   serialEvent
@@ -168,7 +138,7 @@ void serialEvent(Serial puerto) {
                                                     // valor[1] es la distancia
                                                     // pero son strings..
 
-    if (valores.length == 2){
+    if (valores.length == 2) {
       angulo = int(valores[0]);                     // el angulo a entero
       
       distancia = int(                              // de string a entero
@@ -177,8 +147,23 @@ void serialEvent(Serial puerto) {
                           0 , MAXY)                 // rango destino
                      );
     } else return;
-    if (distancia >= 0){
-      guardarPunto();                 // si la distancia es significativa, guardamos el punto
+    if (distancia >= 0){                            // si la distancia es significativa, guardamos el punto
+      historia[numPuntos][0]=angulo;
+      historia[numPuntos][1]=distancia;
+      numPuntos = (numPuntos + 1) % MEMORIA;                 
     }
   }
+}
+
+int inc=1;
+void fakeSerialEvent() {
+   distancia=int(random(MAXY));
+   angulo+=inc;
+   if (angulo > 180) inc=-1; 
+   if (angulo < 0) inc=1; 
+    if (distancia >= 0){                            // si la distancia es significativa, guardamos el punto
+      historia[numPuntos][0]=angulo;
+      historia[numPuntos][1]=distancia;
+      numPuntos = (numPuntos + 1) % MEMORIA;                 
+    }   
 }
