@@ -14,12 +14,13 @@ import processing.serial.*;  // Importamos todos los metodos de serial
 
 int CFONDO           = 0;            // color de fondo NEGRO
 int CBORDE           = 100;          // color de borde GRIS
+int PBORDE           = #329632;      // color de borde del punto (RGB en hexadecimal: 329632 = 50,150,50)
+int PFONDO           = 0x7D329632;   // color de fondo del punto (ARGB en hexadecimal, A indica la transparencia: 7D329632 = 125,50,150,50)
 int DISTANCIA_MAXIMA = 100;          // distancia maxima que mide el sensor
 int MAXX             = 1000;         // maxima ordenada de la pantalla, que sea par
 int MAXY             = MAXX / 2;     // maxima abcisa de la pantalla
 int CENTROX          = MAXX / 2;     // centro de coordenadas (x)
 int CENTROY          = MAXY;         // centro de coordenadas (y)
-int MAXD             = MAXY;         // maxima distancia a representar en la pantalla
 int MEMORIA          = 30;           // numero de puntos a memorizar
 int TAMP             = 30;           // tamaño de punto
 int DECP             = TAMP/MEMORIA; // decremento de persistencia
@@ -30,10 +31,9 @@ Serial miPuerto;
 int distancia = -1;
 int angulo    = 0;
 
-int numPuntos = 0;    // indica el número de puntos almacenados en memoria (en el array historia)
-
 // array bidimensinal para almacenar los puntos (se almacenan tantos como indique la constante MEMORIA)
-int[][] historia;    // {{ang0, dist0}, {ang1, dist1}, {ang2, dist2}, .... {angn, distn}}
+int[][] historia;   // {{ang0, dist0}, {ang1, dist1}, {ang2, dist2}, .... {angn, distn}}
+int numPuntos = 0;  // indica el número de puntos almacenados en memoria (en el array historia)
 
 /*----------------------------------------------------------------------
   setup
@@ -61,7 +61,6 @@ void setup() {
 void draw() {
   pantalla();       // dibuja la pantalla del SODAR
   lineaBarrido();   // dibuja la linea de barrido
-  fakeSerialEvent();
   pintarPuntos();   // dibuja los puntos en la pantalla
 }
 
@@ -71,7 +70,7 @@ void draw() {
   ----------------------------------------------------------------------*/
 void pantalla() {
   background(CFONDO);    // Color del fondo
-  stroke(100);           // Color de borde
+  stroke(CBORDE);           // Color de borde
   noFill();              // Sin relleno
 
   // Dibuja los arcos concéntricos en múltiplos de 100 unidades de diámetro
@@ -81,7 +80,7 @@ void pantalla() {
 
   // Dibujamos lineas cada 20 grados
   for (int ang = 0; ang <= 180; ang = ang + 20) {
-    float angulo_rad = 2*PI - radians(ang);
+    float angulo_rad = TWO_PI - radians(ang);
     line(CENTROX, CENTROY, CENTROX + MAXY * cos(angulo_rad), CENTROY +  MAXY * sin(angulo_rad));
   }
 }
@@ -92,8 +91,7 @@ void pantalla() {
   la linea se mueve en sentido antihorario escaneando distancias
   ----------------------------------------------------------------------*/
 void lineaBarrido() {
-  stroke(50, 150, 50);
-
+  stroke(PBORDE);
   float angulo_rad = TWO_PI - radians(angulo);  // obtener angulo en radianes
   float x = MAXY * cos(angulo_rad);             // obtener coordenadas
   float y = MAXY * sin(angulo_rad);
@@ -115,10 +113,9 @@ void pintarPuntos() {
   funcion para pintar un punto en la pantalla del SODAR
   ----------------------------------------------------------------------*/
 void punto(int angulopunto, int distanciapunto, int decpunto) {
-  fill(50, 150, 50, 125);
-
+  fill(PFONDO);
   float angulo_rad = TWO_PI - radians(angulopunto);   // obtener angulo en radianes
-  float x = distanciapunto * cos(angulo_rad);           // obtener coordenadas
+  float x = distanciapunto * cos(angulo_rad);         // obtener coordenadas
   float y = distanciapunto * sin(angulo_rad);
   ellipse((CENTROX + x), (CENTROY + y), (TAMP - decpunto), (TAMP - decpunto));   // pintar punto como un circulo
 }
@@ -155,15 +152,3 @@ void serialEvent(Serial puerto) {
   }
 }
 
-int inc=1;
-void fakeSerialEvent() {
-   distancia=int(random(MAXY));
-   angulo+=inc;
-   if (angulo > 180) inc=-1; 
-   if (angulo < 0) inc=1; 
-    if (distancia >= 0){                            // si la distancia es significativa, guardamos el punto
-      historia[numPuntos][0]=angulo;
-      historia[numPuntos][1]=distancia;
-      numPuntos = (numPuntos + 1) % MEMORIA;                 
-    }   
-}
