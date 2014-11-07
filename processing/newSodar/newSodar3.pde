@@ -108,9 +108,9 @@ void lineaBarrido() {
  ----------------------------------------------------------------------*/
 void pintaHistoria() {
     for (int i=0; i < (historia.length - 1); i++) { // para cada punto en la historia
-    pintaPunto(historia[i][ANG],             
-               historia[i][DIST],
-               DECP * i);                           // pintar el punto
+	pintaPunto(historia[i][ANG],             
+		   historia[i][DIST],
+		   DECP * i);                           // pintar el punto
   }
 }
 
