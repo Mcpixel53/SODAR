@@ -51,9 +51,9 @@ void setup() {
   }
 
   historia = new int[MEMORIA][2];
-  for (int i=0; i < MEMORIA; i++){    // Preparamos el array de historia, lleno de ceros
+  for (int i=0; i < MEMORIA; i++){    // Preparamos el array de historia, lleno de valores negativos
     for (int j=0; j < 2; j++){
-      historia[i][j] = 0;
+      historia[i][j] = -1;
     }
   }
 }
@@ -118,14 +118,15 @@ void pintaHistoria() {
   funcion para pintar un punto en la pantalla del SODAR
   ----------------------------------------------------------------------*/
 void pintaPunto(float angulo, float distancia, int decpunto) {
-  if (distancia == 0){ return; }  // No pintamos puntos con distancia cero
+  if (distancia > 0) {   // No pintamos puntos con distancia negativa
   
-  fill(PFONDO);
-  float x = distancia * cos(angulo);             // obtener coordenadas
-  float y = distancia * sin(angulo);
-  ellipse((CENTROX + x), (CENTROY + y),          // pintar punto como un circulo
-          (TAMP - decpunto), (TAMP - decpunto)); // el radio depende de lo vieja que es la medida
-                                                 // cuanto mas vieja más pequeño
+	  fill(PFONDO);
+	  float x = distancia * cos(angulo);             // obtener coordenadas
+	  float y = distancia * sin(angulo);
+	  ellipse((CENTROX + x), (CENTROY + y),          // pintar punto como un circulo
+		  (TAMP - decpunto), (TAMP - decpunto)); // el radio depende de lo vieja que es la medida
+							 // cuanto mas vieja más pequeño
+  }
 }
 
 
@@ -179,7 +180,7 @@ float anguloPro(int angArd){
   El último elemento de la lista se pierde
   ----------------------------------------------------------------------*/
 void desplazaHist(){
-    for(int i=1; i < historia.length -1; i++ ){
+    for(int i=historia.length-1; i>0; i-- ){
         for (int j=0; j < 2; j++){
             historia[i][j] = historia[i-1][j];
         }
