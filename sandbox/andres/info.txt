@@ -1,4 +1,0 @@
-processingjs
-	http://processingjs.org/
-entorno online 
-	http://sketchpad.cc/uuWOvGJnK7
