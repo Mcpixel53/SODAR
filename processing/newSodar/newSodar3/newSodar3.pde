@@ -21,9 +21,8 @@ int MAXX             = 1000;         // maxima ordenada de la pantalla, que sea 
 int MAXY             = MAXX / 2;     // maxima abcisa de la pantalla
 int CENTROX          = MAXX / 2;     // centro de coordenadas (x)
 int CENTROY          = MAXY;         // centro de coordenadas (y)
-int MEMORIA          = 30;           // numero de puntos a memorizar (longitud de la historia)
+int MEMORIA          = 80;           // numero de puntos a memorizar (longitud de la historia)
 int TAMP             = 30;           // tamaño de punto
-int DECP             = TAMP/MEMORIA; // decremento de persistencia
 int ANG 	     = 0;	     // Abreviatura para leer angulos del array historia
 int DIST	     = 1;	     // Abreviatrua para leer distancia en el array historia
 
@@ -35,7 +34,7 @@ Serial miPuerto;
 float distancia = -1;   // Ponderada a dimensiones de pantalla
 float angulo    = 0;    // En radianes de processing
 
-// array bidimensinal para almacenar los puntos (se almacenan tantos como indique la constante MEMORIA)
+// array bidimensional para almacenar los puntos (se almacenan tantos como indique la constante MEMORIA)
 float[][] historia;   // {{ang0, dist0}, {ang1, dist1}, {ang2, dist2}, .... {angn, distn}}
 
 
@@ -46,14 +45,16 @@ float[][] historia;   // {{ang0, dist0}, {ang1, dist1}, {ang2, dist2}, .... {ang
 void setup() {
   size(MAXX, MAXY);                 // Preparamos el area de trabajo
   if (Serial.list().length > 0) {
-    miPuerto = new Serial(this, Serial.list()[0] , 9600); // Preparamos el puerto serie
-    miPuerto.bufferUntil('\n');    // se genera un evento serie con cada nueva linea
+    miPuerto = new Serial(this, Serial.list()[0] , 9600);          // Preparamos el puerto serie
+    miPuerto.bufferUntil('\n');                                    // almacenamos en el buffer (memoria interna de la libreria)
+                                                                   // Hasta que llega un retorno de linea
+                                                                   // y se generará un evento serie con cada nueva linea
   }
 
-  historia = new int[MEMORIA][2];
-  for (int i=0; i < MEMORIA; i++){    // Preparamos el array de historia, lleno de valores negativos
+  historia = new float[MEMORIA][2];   // Iniciamos el array historia
+  for (int i=0; i < MEMORIA; i++){    // Preparamos el array de historia, lleno de ceros
     for (int j=0; j < 2; j++){
-      historia[i][j] = -1;
+      historia[i][j] = 0;
     }
   }
 }
@@ -61,11 +62,13 @@ void setup() {
 /*----------------------------------------------------------------------
   draw
   Esta función realiza de forma continua la actividad programada
+  Fijaos que como comentamos en el taller la pantalla se regenera entera
+  en cada ciclo para conseguir el efecto de animación.
   ----------------------------------------------------------------------*/
 void draw() {
   pantalla();       // dibuja la pantalla del SODAR
   lineaBarrido();   // dibuja la linea de barrido
-  pintaHistoria();   // dibuja los puntos del histórico en la pantalla
+  pintaHistoria();  // dibuja los puntos del histórico en la pantalla
 }
 
 /*----------------------------------------------------------------------
@@ -79,12 +82,13 @@ void pantalla() {
 
   // Dibuja los arcos concéntricos en múltiplos de 100 unidades de diámetro
   for (int i = 0; i <= (MAXX / 100); i++) {
-    arc(CENTROX, CENTROY, 100 * i, 100 * i, PI, TWO_PI);
+    arc(CENTROX, CENTROY, 100 * i, 100 * i, PI, TWO_PI); // el radio de cada arco es 100 pixels mayor que el anterior
   }
 
   // Dibujamos lineas cada 20 grados
   for (int ang = 0; ang <= 180; ang = ang + 20) {
-    float angulo_rad = anguloPro(ang);
+    float angulo_rad = anguloPro(ang);                         // Tenemos una función auxiliar (ver abajo) para pasar
+                                                               // para pasar grados de arduino a grados processing
     line(CENTROX, CENTROY, CENTROX + MAXY * cos(angulo_rad), CENTROY +  MAXY * sin(angulo_rad));
   }
 }
@@ -92,7 +96,7 @@ void pantalla() {
 /*----------------------------------------------------------------------
   lineaBarrido
   Esta funcion dibuja la linea de barrido
-  la linea se mueve en sentido antihorario escaneando distancias
+  la linea se mueve marcando el último ángulo recibido del arduino
   ----------------------------------------------------------------------*/
 void lineaBarrido() {
   stroke(PBORDE);
@@ -108,23 +112,31 @@ void lineaBarrido() {
  ----------------------------------------------------------------------*/
 void pintaHistoria() {
     for (int i=0; i < (historia.length - 1); i++) { // para cada punto en la historia
-	pintaPunto(historia[i][ANG],             
+	pintaPunto(historia[i][ANG],           
 		   historia[i][DIST],
-		   DECP * i);                           // pintar el punto
+		   i
+                   );  // pintar el punto
   }
 }
 
 /*----------------------------------------------------------------------
   funcion para pintar un punto en la pantalla del SODAR
+  En esta función se puede jugar a cambiar la forma de representar 
+  la edad del punto. Nosotros tenemos puntos más viejos mas pequeños
+  pero se podría jugar con la trasnparencia, el color, etc.
   ----------------------------------------------------------------------*/
-void pintaPunto(float angulo, float distancia, int decpunto) {
-  if (distancia > 0) {   // No pintamos puntos con distancia negativa
-  
+void pintaPunto(float angulo, float distancia, int histPos) {
+  if (distancia > 0) {   // No pintamos puntos con distancia cero
+          int radio = int(                     // pasamos a entero
+                       map(histPos,            // mapeamos la posición en la historia 
+                       0, historia.length -1,  // intervalo de origen
+                       TAMP, 0)                // intervalo final el punto cero de la historia es el mas grande
+                       );
 	  fill(PFONDO);
 	  float x = distancia * cos(angulo);             // obtener coordenadas
 	  float y = distancia * sin(angulo);
 	  ellipse((CENTROX + x), (CENTROY + y),          // pintar punto como un circulo
-		  (TAMP - decpunto), (TAMP - decpunto)); // el radio depende de lo vieja que es la medida
+		  (radio), (radio)); // el radio depende de lo antigua que es la medida
 							 // cuanto mas vieja más pequeño
   }
 }
@@ -145,14 +157,14 @@ void serialEvent(Serial puerto) {
                                                     // pero son strings..
 
     if (valores.length == 2) {
-        angulo = anguloPro( int(valores[0]) );    // el angulo arduino leido, pasado a entero,
+        angulo = anguloPro( int(valores[ANG]) );  // el angulo arduino leido, pasado a entero,
                                                   // pasado a angulo processing
                 
       
-        distancia = map(float(valores[1]),        // valor a mapear
+        distancia = map(float(valores[DIST]),     // valor a mapear
                         0, DISTANCIA_MAXIMA,      // rango origen (Arduino)
                         0 , MAXY)                 // rango destino (Pantalla Processing)
-                    );
+                    ;
     } else return;
     if (distancia >= 0){                          // si la distancia es significativa
       desplazaHist();                             // desplazamos la historia
@@ -169,6 +181,8 @@ void serialEvent(Serial puerto) {
   anguloPro
   Devuelve el angulo en Processing correspondiente al ángulo en Arduino
   pasado como parámetro
+  Angulos Arduino: Grados sexagesimales en los cuadrantes I y II del plano
+  Angulos Processing: Radianes en los cuadrantes III y IV
   ----------------------------------------------------------------------*/
 float anguloPro(int angArd){
     return (TWO_PI - radians(angArd));

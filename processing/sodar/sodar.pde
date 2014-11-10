@@ -1,146 +1,203 @@
 /*----------------------------------------------------------------------
-  Fichero:	sodar.pde
-  Documento:	
+  Fichero:	newSodar.pde
+  Documento:
   Autores:	ctemes, eukelade, milo, salvari
-  Fecha:        
-  Descripción:	
+  Fecha:
+  Descripción:
   Versión:      0.00
   Historial:    0.00
   ----------------------------------------------------------------------*/
 
-import processing.serial.*;
+import processing.serial.*;  // Importamos todos los metodos de serial
 
 /// ----- constantes -----------------------------------------------------------
 
-int ANCHOCUADRICULA=15;       // ancho de la cuadricula
-int CFONDO= #B0C4DE;          // color de fondo
-int DISTANCIA_MAXIMA = 100;   // distancia maxima que mide el sensor
-int MAXX=800;                 // maxima ordenada de la pantalla			
-int MAXY=400;                 // maxima abcisa de la pantalla
-int CENTROX=MAXX / 2;         // centro de coordenadas (x)
-int CENTROY=MAXY;         // centro de coordenadas (y)
-int MAXD=75;                  // maxima distancia a representar en la pantalla
-int MEMORIA=80;                // numero de puntos a memorizar
-int TAMP=15;                  // tamaño de punto
-int DECP=TAMP/MEMORIA;        // decremento de persistencia
+int CFONDO           = 0;            // color de fondo NEGRO
+int CBORDE           = 100;          // color de borde GRIS
+int PBORDE           = #329632;      // color de borde del punto (RGB en hexadecimal: 329632 = 50,150,50)
+int PFONDO           = 0x7D329632;   // color de fondo del punto (ARGB en hexadecimal, A indica la transparencia: 7D329632 = 125,50,150,50)
+int DISTANCIA_MAXIMA = 100;          // distancia maxima que mide el sensor
+int MAXX             = 1000;         // maxima ordenada de la pantalla, que sea par
+int MAXY             = MAXX / 2;     // maxima abcisa de la pantalla
+int CENTROX          = MAXX / 2;     // centro de coordenadas (x)
+int CENTROY          = MAXY;         // centro de coordenadas (y)
+int MEMORIA          = 30;           // numero de puntos a memorizar (longitud de la historia)
+int TAMP             = 30;           // tamaño de punto
+int ANG 	     = 0;	     // Abreviatura para leer angulos del array historia
+int DIST	     = 1;	     // Abreviatrua para leer distancia en el array historia
+
 
 /// ----- variables ------------------------------------------------------------
-
-int distancia=-1;
-int angulo=0;
-String puntos="";
-int numPuntos=0;
-String contenidoSerie;
 Serial miPuerto;
 
-//------------------------ FUNCION DE INICIALIZACION ----------------------
-// Esta función establece los valores iniciales para configurar processing
-//-------------------------------------------------------------------------
-void setup() {   
-  background(255);
-  size(MAXX, MAXY); 
-  if (Serial.list().length > 0) {     
-     miPuerto = new Serial(this, Serial.list()[0] , 9600);
-     miPuerto.bufferUntil('\n');    // se genera un evento serie con cada nueva linea
-  }
-} 
+// Variables globales de estado, almacenan el último angulo y medida recibidos
+float distancia = -1;   // Ponderada a dimensiones de pantalla
+float angulo    = 0;    // En radianes de processing
 
-//---------------------------- FUNCION DE DIBUJO --------------------------
-// Esta función realiza de forma continua la actividad programada 
-//-------------------------------------------------------------------------
-void draw() { 
+// array bidimensional para almacenar los puntos (se almacenan tantos como indique la constante MEMORIA)
+float[][] historia;   // {{ang0, dist0}, {ang1, dist1}, {ang2, dist2}, .... {angn, distn}}
+
+
+/*----------------------------------------------------------------------
+  setup
+  Esta función establece los valores iniciales para configurar processing
+  ----------------------------------------------------------------------*/
+void setup() {
+  size(MAXX, MAXY);                 // Preparamos el area de trabajo
+  if (Serial.list().length > 0) {
+    miPuerto = new Serial(this, Serial.list()[0] , 9600);          // Preparamos el puerto serie
+    miPuerto.bufferUntil('\n');                                    // almacenamos en el buffer (memoria interna de la libreria)
+                                                                   // Hasta que llega un retorno de linea
+                                                                   // y se generará un evento serie con cada nueva linea
+  }
+
+  historia = new float[MEMORIA][2];   // Iniciamos el array historia
+  for (int i=0; i < MEMORIA; i++){    // Preparamos el array de historia, lleno de ceros
+    for (int j=0; j < 2; j++){
+      historia[i][j] = 0;
+    }
+  }
+}
+
+/*----------------------------------------------------------------------
+  draw
+  Esta función realiza de forma continua la actividad programada
+  Fijaos que como comentamos en el taller la pantalla se regenera entera
+  en cada ciclo para conseguir el efecto de animación.
+  ----------------------------------------------------------------------*/
+void draw() {
   pantalla();       // dibuja la pantalla del SODAR
   lineaBarrido();   // dibuja la linea de barrido
-  pintarPuntos();   // dibuja los puntos en la pantalla
+  pintaHistoria();  // dibuja los puntos del histórico en la pantalla
 }
 
-// Esta funcion dibuja la pantalla del SODAR
-// debe ser una circunferencia con una cuadricula de puntos
-
+/*----------------------------------------------------------------------
+  pantalla
+  Esta funcion dibuja la pantalla del SODAR
+  ----------------------------------------------------------------------*/
 void pantalla() {
-  background(CFONDO);   // pintar el fondo de color CFONDO
-  //ellipse(CENTROX,CENTROY,MAXD+MAXD,MAXD+MAXD);   // dibujar un circulo
-  ellipse(CENTROX,CENTROY,2*MAXY,2*MAXY);   // dibujar un circulo
-  stroke(CFONDO);       // color de fondo
-  for(int i=0; i<MAXX; i+=ANCHOCUADRICULA) {      // dibujar una cuadricula
-      line(i,0,i,MAXY);
-      line(0,i,MAXX,i);
+  background(CFONDO);    // Color del fondo
+  stroke(CBORDE);        // Color de borde
+  noFill();              // Sin relleno
+
+  // Dibuja los arcos concéntricos en múltiplos de 100 unidades de diámetro
+  for (int i = 0; i <= (MAXX / 100); i++) {
+    arc(CENTROX, CENTROY, 100 * i, 100 * i, PI, TWO_PI); // el radio de cada arco es 100 pixels mayor que el anterior
   }
-  stroke(0);            // color negro
+
+  // Dibujamos lineas cada 20 grados
+  for (int ang = 0; ang <= 180; ang = ang + 20) {
+    float angulo_rad = anguloPro(ang);                         // Tenemos una función auxiliar (ver abajo) para pasar
+                                                               // para pasar grados de arduino a grados processing
+    line(CENTROX, CENTROY, CENTROX + MAXY * cos(angulo_rad), CENTROY +  MAXY * sin(angulo_rad));
+  }
 }
 
-
-// Esta funcion dibuja la linea de barrido
-// la linea se mueve en sentido antihorario escaneando distancias
-
+/*----------------------------------------------------------------------
+  lineaBarrido
+  Esta funcion dibuja la linea de barrido
+  la linea se mueve marcando el último ángulo recibido del arduino
+  ----------------------------------------------------------------------*/
 void lineaBarrido() {
-  float angulo_rad= TWO_PI - radians(angulo);   // obtener angulo en radianes
-  float x = MAXY*cos(angulo_rad);               // obtener coordenadas
-  float y = MAXY*sin(angulo_rad);
-  line(CENTROX,CENTROY,CENTROX+x,CENTROY+y);    // dibujar una linea de barrido
+  stroke(PBORDE);
+  float x = MAXY * cos(angulo);                    // obtener coordenadas
+  float y = MAXY * sin(angulo);
+  line(CENTROX, CENTROY, CENTROX+x, CENTROY+y);    // dibujar una linea de barrido
 }
 
-
-// Esta funcion dibuja los puntos en la pantalla del SODAR
-// pinta tantos puntos como guarde en MEMORIA
-
-void pintarPuntos() {
-  String[] p = split(puntos,";");           // obtener todos los puntos en memoria
-  for (int f=0; f<p.length; f++) {          // para cada punto
-    String[] v = split(p[f], ",");        // obtener angulo y distancia
-    punto(int(v[0]),int(v[1]),DECP*f);    // pintar el punto
-  }
-}    
-
-
-// funcion para pintar un punto en la pantalla del SODAR
-
-void punto(int angulopunto, int distanciapunto, int decpunto) {
-  float angulo_rad= TWO_PI - radians(angulopunto);    // obtener angulo en radianes
-  float x = distanciapunto*cos(angulo_rad);           // obtener coordenadas
-  float y = distanciapunto*sin(angulo_rad);
-  ellipse(CENTROX+x,CENTROY+y,TAMP-decpunto,TAMP-decpunto);   // pintar punto como un circulo
-}
-
-
-// funcion para guardar los puntos en memoria
-// guarda tantos puntos como indique la constante MEMORIA
-
-void guardarPunto() {
-  if (puntos.length() > 0)    // si ya hay puntos en memoria
-    puntos = str(angulo) + "," + str(distancia) + ";" + puntos;   // añadirlo al principio
-  else    // si no hay puntos en memoria
-    puntos = str(angulo) + "," + str(distancia);    // guardarlo
-    if (numPuntos >= MEMORIA)   // si ya se ha llenado la memoria
-			puntos = puntos.substring(0,lastindex(puntos,';'));   // descartar puntos sobrantes        
-    else    // si aun no esta llena
-      numPuntos++;    // incrementar el contador de puntos en memoria
-}
-
-// funcion que obtiene la posicion en una cadena del ultimo caracter indicado
-// ej: ultima posicion del caracter + en la cadena "1+3+4" seria 3 
-// (porque las cadenas empiezan en la posicion 0)
-
-int lastindex(String s, char c) {
-  int i= s.length()-1;    // i es la posicion del final de la cadena
-  while ((s.charAt(i) != c) && (i>=0)) i--;   // mientras el caracter en la posicion i no sea el buscado y no lleguemos al principio, ir hacia atras por la cadena
-  return i;   // devolver la posicion del caracter encontrado o una posicion inexistente
-}
-
-
-// Esta funcion se llama cada vez que hay datos en el puerto serie
-
-void serialEvent(Serial puerto) {  
-  contenidoSerie = puerto.readString();   // leemos el contenido del puerto serie
-  if (contenidoSerie != null) {   // si tiene datos
-    contenidoSerie=trim(contenidoSerie);    // nos quedamos con los datos
-    String[] valores = split(contenidoSerie, ',');    // y calculamos  
-    try {      
-      angulo = Integer.parseInt(valores[0]);    // el angulo
-      distancia = int(Float.parseFloat(valores[1]) / DISTANCIA_MAXIMA * MAXY);    // y la distancia
-    } catch (Exception e) {}  
-  if (distancia>=0) guardarPunto();   // si la distancia es un valor real, guardamos el punto
+/*----------------------------------------------------------------------
+  pintarPuntos
+  Esta funcion dibuja los puntos en la pantalla del SODAR
+  pinta tantos puntos como guarde en historia
+ ----------------------------------------------------------------------*/
+void pintaHistoria() {
+    for (int i=0; i < (historia.length - 1); i++) { // para cada punto en la historia
+	pintaPunto(historia[i][ANG],           
+		   historia[i][DIST],
+		   i
+                   );  // pintar el punto
   }
 }
 
+/*----------------------------------------------------------------------
+  funcion para pintar un punto en la pantalla del SODAR
+  En esta función se puede jugar a cambiar la forma de representar 
+  la edad del punto. Nosotros tenemos puntos más viejos mas pequeños
+  pero se podría jugar con la trasnparencia, el color, etc.
+  ----------------------------------------------------------------------*/
+void pintaPunto(float angulo, float distancia, int histPos) {
+  if (distancia > 0) {   // No pintamos puntos con distancia cero
+          int radio = int(                     // pasamos a entero
+                       map(histPos,            // mapeamos la posición en la historia 
+                       0, historia.length -1,  // intervalo de origen
+                       TAMP, 0)                // intervalo final el punto cero de la historia es el mas grande
+                       );
+	  fill(PFONDO);
+	  float x = distancia * cos(angulo);             // obtener coordenadas
+	  float y = distancia * sin(angulo);
+	  ellipse((CENTROX + x), (CENTROY + y),          // pintar punto como un circulo
+		  (radio), (radio)); // el radio depende de lo antigua que es la medida
+							 // cuanto mas vieja más pequeño
+  }
+}
+
+
+/*----------------------------------------------------------------------
+  serialEvent
+  Esta funcion se llama cada vez que hay datos en el puerto serie
+  ----------------------------------------------------------------------*/
+void serialEvent(Serial puerto) {
+  String contenidoSerie;
+
+  contenidoSerie = puerto.readString();             // leemos el contenido del puerto serie
+  if (contenidoSerie != null) {                     // si tiene datos
+    contenidoSerie = trim(contenidoSerie);          // nos quedamos con los datos
+    String[] valores = split(contenidoSerie, ',');  // valor[0] es el angulo en grados
+                                                    // valor[1] es la distancia
+                                                    // pero son strings..
+
+    if (valores.length == 2) {
+        angulo = anguloPro( int(valores[ANG]) );  // el angulo arduino leido, pasado a entero,
+                                                  // pasado a angulo processing
+                
+      
+        distancia = map(float(valores[DIST]),     // valor a mapear
+                        0, DISTANCIA_MAXIMA,      // rango origen (Arduino)
+                        0 , MAXY)                 // rango destino (Pantalla Processing)
+                    ;
+    } else return;
+    if (distancia >= 0){                          // si la distancia es significativa
+      desplazaHist();                             // desplazamos la historia
+      historia[0][ANG]   = angulo;                // guardamos el nuevo punto en la historia
+      historia[0][DIST]  = distancia;
+    }
+  }
+}
+
+//______________________________________________________________________
+// Funciones auxiliares
+
+/*----------------------------------------------------------------------
+  anguloPro
+  Devuelve el angulo en Processing correspondiente al ángulo en Arduino
+  pasado como parámetro
+  Angulos Arduino: Grados sexagesimales en los cuadrantes I y II del plano
+  Angulos Processing: Radianes en los cuadrantes III y IV
+  ----------------------------------------------------------------------*/
+float anguloPro(int angArd){
+    return (TWO_PI - radians(angArd));
+}
+
+/*----------------------------------------------------------------------
+  desplazaHist
+  Esta función desplaza todos los elementos de la lista hacia el final
+  El último elemento de la lista se pierde
+  ----------------------------------------------------------------------*/
+void desplazaHist(){
+    for(int i=historia.length-1; i>0; i-- ){
+        for (int j=0; j < 2; j++){
+            historia[i][j] = historia[i-1][j];
+        }
+    }
+}
 
